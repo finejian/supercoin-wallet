@@ -8,9 +8,11 @@ import android.view.inputmethod.EditorInfo
 import android.widget.TextView
 import kotlinx.android.synthetic.main.activity_keystore.*
 import org.web3j.crypto.ECKeyPair
+import org.web3j.crypto.Hash.sha256
 import org.web3j.crypto.Keys
 import org.web3j.crypto.Wallet
 import java.lang.ref.WeakReference
+import java.security.SecureRandom
 
 class KeystoreActivity : BaseActivity() {
 
@@ -60,8 +62,20 @@ class KeystoreActivity : BaseActivity() {
 
         override fun doInBackground(vararg p0: Void?): String {
             return try {
-                val keyPair = Keys.createEcKeyPair()
-                val ecKeyPair = ECKeyPair.create(keyPair.privateKey)
+                // 直接生成privateKey
+                // val keyPair = Keys.createEcKeyPair()
+                // val ecKeyPair = ECKeyPair.create(keyPair.privateKey)
+
+                // bip39 规则生成助记词和privateKey
+                val initialEntropy = ByteArray(16)
+                SecureRandom().nextBytes(initialEntropy)
+                // MnemonicUtils 没有用Web3j库提供的版本
+                // 原因是 'org.web3j:core:3.3.1-android' 的MnemonicUtils读取Assets助记词库代码有bug
+                // 这个bug已经在 https://github.com/web3j/web3j/issues/403 得到修复，尚未打包到新版本
+                val mnemonic = MnemonicUtils.generateMnemonic(initialEntropy)
+                val seed = MnemonicUtils.generateSeed(mnemonic, password)
+                val ecKeyPair = ECKeyPair.create(sha256(seed))
+
                 val privateKey = ecKeyPair.privateKey
                 val publicKey = ecKeyPair.publicKey
                 val address = Keys.getAddress(ecKeyPair)
@@ -90,7 +104,9 @@ class KeystoreActivity : BaseActivity() {
                         "\n"
 
 
-                return accountInfo + keystoreInfo + decryptAccountInfo
+                val mnemonicInfo = "mnemonic: $mnemonic"
+
+                return accountInfo + keystoreInfo + decryptAccountInfo + mnemonicInfo
             } catch (e: Exception) {
                 e.printStackTrace()
                 e.cause.toString()
