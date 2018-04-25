@@ -3,6 +3,7 @@
     package="com.supercoin.scwallet">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -24,8 +25,8 @@
             android:name=".KeystoreActivity"
             android:label="Create private keystore" />
         <activity
-            android:name=".Web3jActivity"
-            android:label="Web3j connect eth main net" />
+            android:name=".QueryEthActivity"
+            android:label="Query eth on main net" />
     </application>
 
 </manifest>

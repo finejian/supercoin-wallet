@@ -3,23 +3,27 @@ package com.supercoin.scwallet
 import android.os.AsyncTask
 import android.os.Bundle
 import android.view.View
-import kotlinx.android.synthetic.main.activity_web3j.*
+import kotlinx.android.synthetic.main.activity_query_eth.*
 import org.web3j.protocol.Web3jFactory
 import org.web3j.protocol.core.DefaultBlockParameterName
 import org.web3j.protocol.http.HttpService
 import java.lang.ref.WeakReference
 
-class Web3jActivity : BaseActivity() {
+class QueryEthActivity : BaseActivity() {
+
+    override fun displayBackButton(): Boolean {
+        return true
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_web3j)
+        setContentView(R.layout.activity_query_eth)
 
         ConnectWeb3jTask(this).execute()
     }
 
-    private class ConnectWeb3jTask(controller: Web3jActivity) : AsyncTask<Void, Void, String>() {
-        private val controller = WeakReference<Web3jActivity>(controller)
+    private class ConnectWeb3jTask(controller: QueryEthActivity) : AsyncTask<Void, Void, String>() {
+        private val controller = WeakReference<QueryEthActivity>(controller)
 
         override fun doInBackground(vararg p0: Void?): String {
             // https://github.com/web3j/web3j

@@ -11,6 +11,6 @@ class MainActivity : BaseActivity() {
         setContentView(R.layout.activity_main)
 
         btn_key_store.setOnClickListener { startActivity(Intent(this, KeystoreActivity::class.java)) }
-        btn_web3j.setOnClickListener { startActivity(Intent(this, Web3jActivity::class.java)) }
+        btn_web3j.setOnClickListener { startActivity(Intent(this, QueryEthActivity::class.java)) }
     }
 }
